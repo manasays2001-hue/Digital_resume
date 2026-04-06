@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+        <title>View student information</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="card-container" align="center">
+
+  <div class="col-md-4">
+
+    <form action="{% url 'verify_otp' %}" method="POST" class="container mt-5">
+    {% csrf_token %}
+     <div class="card-header text-center mb-4">
+                    <h3>verify otp</h3>
+                </div>
+                <h3>the generated otp is : {{ generated_otp }}
+                      <input type="text" name="otp"  value="{{ generated_otp }}" hidden>
+
+                      <input type="text" name="verify_otp" >
+                </h3>
+     <div class="card-body text center" >           
+   <div>
+    <input type="submit" class="form-control mb-3" name="verify_OTP" placeholder="enter the OTP you have received thur contact number" value="Verify OTP"> 
+
+   </div>
+
+   <div class="mt-4">
+  
+    <a href="#" class="btn btn-primary">regenerate otp</a>
+    </div>
+
+    {{ entered_otp }}
+    
+   
+    
+    </div>
+</form>
+  </div>
+  </div>
+</div>
+
+
+    
+</body>
+</html>
