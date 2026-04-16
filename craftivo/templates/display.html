@@ -2,52 +2,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
-        <title>View student information</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>Verify OTP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light d-flex align-items-center justify-content-center min-vh-100">
 
-<div class="card-container" align="center">
+  <div class="card shadow-sm border-0 rounded-4 p-4" style="width: 100%; max-width: 420px;">
 
-  <div class="col-md-4">
-
-    <form action="{% url 'verify_otp' %}" method="POST" class="container mt-5">
-    {% csrf_token %}
-     <div class="card-header text-center mb-4">
-                    <h3>verify otp</h3>
-                </div>
-                <h3>the generated otp is : {{ generated_otp }}
-                      <input type="text" name="otp"  value="{{ generated_otp }}" hidden>
-
-                      <input type="text" name="verify_otp" >
-                </h3>
-     <div class="card-body text center" >           
-   <div>
-    <input type="submit" class="form-control mb-3" name="verify_OTP" placeholder="enter the OTP you have received thur contact number" value="Verify OTP"> 
-
-   </div>
-
-   <div class="mt-4">
-  
-    <a href="#" class="btn btn-primary">regenerate otp</a>
+    <div class="text-center mb-4">
+      <div class="display-5 mb-2">🔐</div>
+      <h4 class="fw-semibold mb-1">Verify OTP</h4>
+      <p class="text-muted small mb-0">Enter the OTP sent to your registered Email</p>
     </div>
 
-    {{ entered_otp }}
-    
-   
-    
-    </div>
-</form>
-  </div>
-  </div>
-</div>
+    <form action="{% url 'verify_otp' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="otp" value="{{ generated_otp }}">
 
+      <div class="mb-3">
+        <label for="otp_input" class="form-label fw-medium">Enter OTP</label>
+        <input
+          type="text"
+          id="otp_input"
+          name="verify_otp"
+          class="form-control form-control-lg text-center fw-bold letter-spacing-wide"
+          placeholder="- - - - - -"
+          maxlength="6"
+          autocomplete="one-time-code"
+          style="letter-spacing: 0.4em;"
+        >
+      </div>
 
-    
+      {% if entered_otp %}
+      <div class="alert alert-danger py-2 small">{{ entered_otp }}</div>
+      {% endif %}
+
+      <div class="d-grid mb-3">
+        <button type="submit" name="verify_OTP" class="btn btn-dark btn-lg rounded-3">
+          Verify OTP
+        </button>
+      </div>
+
+      <div class="d-grid">
+        <a href="" class="btn btn-outline-secondary rounded-3">
+          Regenerate OTP
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+
 </body>
 </html>
