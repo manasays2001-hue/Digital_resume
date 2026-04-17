@@ -19,7 +19,7 @@
 
     <form action="{% url 'verify_otp' %}" method="POST">
       {% csrf_token %}
-      <input type="hidden" name="otp" value="{{ generated_otp }}">
+      
 
       <div class="mb-3">
         <label for="otp_input" class="form-label fw-medium">Enter OTP</label>
@@ -45,13 +45,13 @@
         </button>
       </div>
 
+    </form>
       <div class="d-grid">
         <a href="" class="btn btn-outline-secondary rounded-3">
           Regenerate OTP
         </a>
       </div>
 
-    </form>
 
   </div>
 
