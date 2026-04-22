@@ -9,49 +9,122 @@
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center min-vh-100">
 
-  <div class="card shadow-sm border-0 rounded-4 p-4" style="width: 100%; max-width: 420px;">
+  <div style="width: 100%; max-width: 420px;">
 
-    <div class="text-center mb-4">
-      <div class="display-5 mb-2">🔐</div>
-      <h4 class="fw-semibold mb-1">Verify OTP</h4>
-      <p class="text-muted small mb-0">Enter the OTP sent to your registered Email</p>
-    </div>
+    <!-- Verify OTP Card -->
+    <div class="card shadow-sm border-0 rounded-4 p-4 mb-3">
 
-    <form action="{% url 'verify_otp' %}" method="POST">
-      {% csrf_token %}
-      
-
-      <div class="mb-3">
-        <label for="otp_input" class="form-label fw-medium">Enter OTP</label>
-        <input
-          type="text"
-          id="otp_input"
-          name="verify_otp"
-          class="form-control form-control-lg text-center fw-bold letter-spacing-wide"
-          placeholder="- - - - - -"
-          maxlength="6"
-          autocomplete="one-time-code"
-          style="letter-spacing: 0.4em;"
-        >
+      <div class="text-center mb-4">
+        <div class="display-5 mb-2">🔐</div>
+        <h4 class="fw-semibold mb-1">Verify OTP</h4>
+        <p class="text-muted small mb-0">
+          OTP sent to
+          {% if email %}
+            <strong>{{ email }}</strong>
+          {% else %}
+            your registered email
+          {% endif %}
+        </p>
       </div>
 
-      {% if entered_otp %}
-      <div class="alert alert-danger py-2 small">{{ entered_otp }}</div>
+      <form action="{% url 'verify_otp' %}" method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="otp_input" class="form-label fw-medium">Enter OTP</label>
+          <input
+            type="text"
+            id="otp_input"
+            name="verify_otp"
+            class="form-control form-control-lg text-center fw-bold {% if error %}is-invalid{% endif %}"
+            placeholder="- - - -"
+            maxlength="6"
+            autocomplete="one-time-code"
+            style="letter-spacing: 0.4em;"
+          >
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-2 small rounded-3" role="alert">
+          <span>❌</span>
+          <div><strong>Incorrect OTP.</strong> {{ error }}</div>
+        </div>
+        <div class="d-grid mb-3">
+          <button type="submit" class="btn btn-danger btn-lg rounded-3">🔁 Retry</button>
+        </div>
+        {% else %}
+        <div class="d-grid mb-3">
+          <button type="submit" class="btn btn-dark btn-lg rounded-3">Verify OTP</button>
+        </div>
+        {% endif %}
+
+      </form>
+
+      <!-- Toggle Regenerate Card via URL -->
+      {% if show_regen %}
+        <a href="{% url 'verify_otp' %}" class="btn btn-outline-secondary rounded-3 w-100">
+          Cancel
+        </a>
+      {% else %}
+        <a href="{% url 'verify_otp' %}?regen=1" class="btn btn-outline-secondary rounded-3 w-100">
+          🔄 Regenerate OTP
+        </a>
       {% endif %}
 
-      <div class="d-grid mb-3">
-        <button type="submit" name="verify_OTP" class="btn btn-dark btn-lg rounded-3">
-          Verify OTP
-        </button>
+    </div>
+
+    <!-- Regenerate OTP Card — shown only when ?regen=1 -->
+    {% if show_regen %}
+    <div class="card shadow-sm border-0 rounded-4 p-4">
+
+      <div class="text-center mb-3">
+        <div class="display-6 mb-1">📧</div>
+        <h6 class="fw-semibold mb-0">Resend OTP to</h6>
+        
       </div>
 
-    </form>
-      <div class="d-grid">
-        <a href="" class="btn btn-outline-secondary rounded-3">
-          Regenerate OTP
-        </a>
+      <!-- Read-only view with Edit button -->
+      {% if not edit_email %}
+      <div class="mb-3">
+        <label class="form-label fw-medium small">Email Address</label>
+        <div class="input-group">
+          <input type="email" class="form-control" value="{{ email }}" readonly>
+          <a href="{% url 'verify_otp' %}?regen=1&edit=1" class="btn btn-outline-secondary">
+             Edit
+          </a>
+        </div>
       </div>
+      <form action="{% url 'regenerate_otp' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="d-grid">
+          <button type="submit" class="btn btn-dark rounded-3">🔄 Send New OTP</button>
+        </div>
+      </form>
 
+      {% else %}
+      <!-- Editable email form -->
+      <form action="{% url 'regenerate_otp' %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-medium small">Edit Email Address</label>
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            value="{{ email }}"
+            required
+            autofocus
+          >
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-dark rounded-3">🔄 Send New OTP</button>
+        </div>
+      </form>
+      {% endif %}
+
+    </div>
+    {% endif %}
 
   </div>
 

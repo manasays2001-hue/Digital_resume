@@ -24,5 +24,6 @@ urlpatterns = [
     path('display', views.display , name='display'),
     path('verify_otp', views.verify_otp , name='verify_otp'),
     path('contact', views.contact , name='contact'),
+    path('regenerate_otp', views.regenerate_otp, name='regenerate_otp')
     
 ]
